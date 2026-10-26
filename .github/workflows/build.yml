@@ -81,8 +81,9 @@ jobs:
       - run: ls -la artifacts
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ github.run_number }}
-          name: Tide 潮汐 v1.0.${{ github.run_number }}
+          tag_name: v1.0.0
+          name: Tide 潮汐 v1.0.0
+          overwrite_files: true
           body: |
             Tide 潮汐 · 沉浸式音乐播放器
 
