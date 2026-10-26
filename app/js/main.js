@@ -109,7 +109,8 @@ function applyTrackUI(t) {
   el.miniCover.src = t.cover;
   el.miniTitle.textContent = t.title;
   el.miniArtist.textContent = t.artist;
-  el.mini.classList.add('show');
+  el.mini.hidden = false;
+  requestAnimationFrame(() => el.mini.classList.add('show'));
   Particles.setTint(t.tint || '#7fe8d4');
   el.tDur.textContent = fmt(t.dur);
   Lyrics.reset();
