@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0a0a0c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Tide · 潮汐</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- ═══ 背景：流动的液体光斑 ═══ -->
+<div class="bg" id="bg">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="grain"></div>
+</div>
+
+<!-- ═══ 桌面侧栏 ═══ -->
+<aside class="rail">
+  <div class="rail-logo">TIDE<span>潮汐</span></div>
+  <nav class="rail-nav">
+    <a class="nav-item active" data-nav="all"><i>◍</i><em>全部音乐</em></a>
+    <a class="nav-item" data-nav="fav"><i>♡</i><em>我喜欢的</em></a>
+    <a class="nav-item" data-nav="recent"><i>◔</i><em>最近播放</em></a>
+  </nav>
+  <div class="rail-sec">
+    <div class="rail-label">播放列表</div>
+    <a class="pl-item" data-playlist="Side A"><span class="dot"></span>Side A</a>
+    <a class="pl-item" data-playlist="Side B"><span class="dot"></span>Side B</a>
+    <a class="pl-item" data-playlist="Side C"><span class="dot"></span>Side C</a>
+  </div>
+  <div class="rail-foot">
+    <button class="rail-import" id="btnImport">＋ 导入本地音乐</button>
+    <div class="rail-tip">拖入 mp3 / flac / wav 即可播放</div>
+  </div>
+</aside>
+
+<!-- ═══ 主舞台 ═══ -->
+<main class="stage">
+  <header class="page-head">
+    <button class="m-back" id="mBack" aria-label="返回">‹</button>
+    <div class="head-txt">
+      <h1 class="page-title" id="pageTitle">往后只考虑<br>自己喜欢的音乐</h1>
+      <p class="page-sub" id="pageSub">Tide Ensemble · 3 张专辑 · 8 首</p>
+    </div>
+    <div class="head-actions">
+      <button class="pill ghost" id="btnLayout" title="切换布局">▤</button>
+      <button class="pill" id="btnImport2">＋ 导入</button>
+    </div>
+  </header>
+
+  <section class="wall" id="wall"></section>
+
+  <section class="empty" id="empty" hidden>
+    <div class="empty-ico">♫</div>
+    <p>还没有音乐<br><span>点右上角「导入」或把文件拖进来</span></p>
+  </section>
+</main>
+
+<!-- ═══ 迷你播放条 ═══ -->
+<div class="mini" id="mini" hidden>
+  <div class="mini-bar"><i id="miniBar"></i></div>
+  <div class="mini-inner" id="miniOpen">
+    <div class="mini-cover"><img id="miniCover" alt=""></div>
+    <div class="mini-meta">
+      <div class="mini-title" id="miniTitle">—</div>
+      <div class="mini-artist" id="miniArtist">—</div>
+    </div>
+    <div class="mini-time" id="miniTime">0:00 / 0:00</div>
+    <button class="mini-btn" id="miniPlay" aria-label="播放">▶</button>
+    <button class="mini-btn ghost" id="miniNext" aria-label="下一首">⏭</button>
+  </div>
+</div>
+
+<!-- ═══ 全屏播放页 ═══ -->
+<section class="player" id="player" data-mode="lyrics">
+  <div class="p-backdrop" id="pBackdrop"></div>
+  <div class="p-scrim"></div>
+
+  <header class="p-head">
+    <button class="icon-btn" id="pClose" aria-label="收起">⌄</button>
+    <div class="p-head-txt">
+      <div class="p-album" id="pAlbum">Side A</div>
+      <div class="p-title" id="pTitle">—</div>
+    </div>
+    <div class="p-modes" id="pModes">
+      <button data-mode="lyrics" class="on">歌词</button>
+      <button data-mode="bubble">气泡</button>
+      <button data-mode="particle">粒子</button>
+    </div>
+  </header>
+
+  <canvas class="p-particles" id="pParticles"></canvas>
+
+  <div class="p-body">
+    <!-- 歌词流 -->
+    <div class="p-lyrics" id="pLyrics"></div>
+    <!-- 气泡 -->
+    <div class="p-bubbles" id="pBubbles"></div>
+  </div>
+
+  <div class="p-side">
+    <div class="disc-wrap" id="discWrap">
+      <div class="disc" id="disc">
+        <div class="disc-grooves"></div>
+        <img class="disc-art" id="discArt" alt="">
+        <div class="disc-hole"></div>
+        <div class="disc-shine"></div>
+      </div>
+      <div class="disc-shadow"></div>
+    </div>
+    <div class="p-now">
+      <div class="p-now-title" id="pNowTitle">—</div>
+      <div class="p-now-artist" id="pNowArtist">—</div>
+    </div>
+  </div>
+
+  <div class="p-controls">
+    <div class="seek" id="seek">
+      <span class="t" id="tCur">0:00</span>
+      <div class="seek-track"><i id="seekFill"></i><b id="seekKnob"></b></div>
+      <span class="t" id="tDur">0:00</span>
+    </div>
+    <div class="btns">
+      <button class="c-btn small" id="btnShuffle" aria-label="随机">⇄</button>
+      <button class="c-btn" id="btnPrev" aria-label="上一首">⏮</button>
+      <button class="c-play" id="btnPlay" aria-label="播放"><span id="playIcon">▶</span></button>
+      <button class="c-btn" id="btnNext" aria-label="下一首">⏭</button>
+      <button class="c-btn small" id="btnRepeat" aria-label="循环">↻</button>
+    </div>
+    <div class="fx-row">
+      <button class="chip" id="btnFx">音效</button>
+      <button class="chip" id="btnFav">♡ 喜欢</button>
+    </div>
+  </div>
+
+  <!-- 音效面板（真实 WebAudio 处理） -->
+  <div class="fx-panel" id="fxPanel" hidden>
+    <div class="fx-head">
+      <span>音效设置</span>
+      <button class="fx-close" id="fxClose">✕</button>
+    </div>
+    <div class="fx-presets" id="fxPresets">
+      <button data-preset="flat">默认</button>
+      <button data-preset="warm">温暖</button>
+      <button data-preset="bright">通透</button>
+      <button data-preset="club">夜店</button>
+    </div>
+    <label class="fx-row-in"><span>低频</span><input type="range" id="eqBass" min="-12" max="12" value="0"><em id="eqBassV">0</em></label>
+    <label class="fx-row-in"><span>中频</span><input type="range" id="eqMid" min="-12" max="12" value="0"><em id="eqMidV">0</em></label>
+    <label class="fx-row-in"><span>高频</span><input type="range" id="eqTreble" min="-12" max="12" value="0"><em id="eqTrebleV">0</em></label>
+    <label class="fx-row-in"><span>混响</span><input type="range" id="eqVerb" min="0" max="100" value="12"><em id="eqVerbV">12</em></label>
+    <label class="fx-row-in"><span>空间</span><input type="range" id="eqRoom" min="0" max="100" value="30"><em id="eqRoomV">30</em></label>
+    <div class="fx-toggle" id="fxSoft">柔和模式 <i></i></div>
+  </div>
+</section>
+
+<input type="file" id="fileIn" accept="audio/*,.lrc" multiple hidden>
+
+<script src="js/data.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/lyrics.js"></script>
+<script src="js/particles.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
